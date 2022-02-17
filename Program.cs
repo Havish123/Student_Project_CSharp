@@ -15,10 +15,25 @@ namespace Student_Management
     //Generic Student Method based on Organization
     public class Stud_List<T>
     {
-        private static Dictionary<int, T> studList { get; set; }
+        private static Stud_List<T> instance = null;
+        private Stud_List() { }
+        private static Dictionary<int, T> studList = null;
+
+        public static Stud_List<T> getInstance()
+        {
+            if(instance == null)
+            {
+                instance = new Stud_List<T>();
+            }
+            return instance;
+        }
 
         public Dictionary<int, T> getStudList()
         {
+            if(studList == null)
+            {
+                studList=DatabaseManager.getStuData<T>(new Student_Project().stu_path);
+            }
             return studList;
         }
         public void setStudList(Dictionary<int, T> list)
@@ -143,6 +158,7 @@ namespace Student_Management
             Assistant_Professor,
             Library_Staff,
         }
+        
 
     }
 
@@ -209,6 +225,87 @@ namespace Student_Management
 
     }
 
+    //Principal Operation
+    interface Principal_operation:Staff_operations
+    {
+        public void addStaff<T>();
+        void updateSalary();
+    }
+
+    public class Staff_operation : Staff_operations, Principal_operation
+    {
+        void Staff_operations.addmarkList()
+        {
+            throw new NotImplementedException();
+        }
+
+        void Principal_operation.addStaff<T>()
+        {
+            
+            if (Student_Project.appInfo.org_type.Equals("School"))
+            {
+                School_staff st = new School_staff();
+
+                Console.WriteLine("Enter the Staff_id");
+                st.staff_id=int.Parse(Console.ReadLine());
+
+                Console.WriteLine("Enter the Staff Name");
+                st.name=Console.ReadLine();
+
+                Console.WriteLine("Enter the Staff Email ID");
+                st.email_id=Console.ReadLine();
+
+                while (!Validation.isEmail(st.email_id))
+                {
+                    Console.WriteLine("Please Enter Valid Email");
+                    st.email_id = Console.ReadLine();
+                }
+
+                Console.WriteLine("Enter the Staff Phone Number");
+                st.phone_no=long.Parse(Console.ReadLine());
+
+                Console.WriteLine("Enter the Staff Salary");
+                st.salary=int.Parse(Console.ReadLine());
+
+                Console.WriteLine("Enter the Staff Designation");
+                String str = "";
+                int j = 1;
+                foreach(var i in Enum.GetValues(typeof(Data_model.S_Designations)))
+                {
+                    str=str+ j.ToString()+"."+ i.ToString()+" ";
+                    j++;
+                }
+                Console.WriteLine(str); 
+
+                st.designation=Console.ReadLine();
+
+                st.passcode=Console.ReadLine();
+
+                st.subject=Console.ReadLine();
+            }
+            else
+            {
+                College_staff st = new College_staff();
+                
+            }
+        }
+
+        void Staff_operations.addStudent()
+        {
+            throw new NotImplementedException();
+        }
+
+        void Staff_operations.removeStudent()
+        {
+            throw new NotImplementedException();
+        }
+
+        void Principal_operation.updateSalary()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     //Student options
     interface Student_operations
     {
@@ -224,10 +321,7 @@ namespace Student_Management
     {
         public string subject { get; set; }
 
-        public void AddStaff(School_staff staff)
-        {
-
-        }
+        
     }
 
     //College Staff Model
@@ -236,13 +330,7 @@ namespace Student_Management
     {
 
         public string department { get; set; }
-        bool flag = true;
-
-        public void AddStaff(College_staff staff)
-        {
-
-        }
-
+        
     }
     
 
@@ -361,6 +449,8 @@ namespace Student_Management
             }
             else
             {
+                Principal_operation st = new Staff_operation();
+                st.addStaff<T>();
                 return null;
             }
             
@@ -394,8 +484,8 @@ namespace Student_Management
         public static bool login = false;
         public static Staff staffData = null;
         public static Student stuData = null;
-        string stu_path = "F:\\data\\student.txt";
-        string staff_path = "F:\\data\\staff.txt";
+        public string stu_path = "F:\\data\\student.txt";
+        public string staff_path = "F:\\data\\staff.txt";
 
         public static void Main(string[] args)
         {
@@ -457,7 +547,7 @@ namespace Student_Management
         //Get the Data Previously Stored
         public static void getAllData<T, T1>()
         {
-            Data_model.getInstance().studentList= DatabaseManager.getStuData<T1>(new Student_Project().stu_path);
+            Stud_List<T>.getInstance().getStudList();
             DatabaseManager.getStaffData<T>(new Student_Project().staff_path);
         }
 
