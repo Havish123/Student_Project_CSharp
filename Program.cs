@@ -109,7 +109,7 @@ namespace Student_Management
         //Standart List if application use in Schools
         public enum Standard
         {
-            First,
+            First=1,
             Second,
             Third,
             Fourth,
@@ -211,7 +211,7 @@ namespace Student_Management
         public string name { get; set; }
         public string email_id { get; set; }
         public long phone_no { get; set; }
-        public string designation { get; set; }
+       
         public int salary { get; set; }
 
     }
@@ -275,13 +275,18 @@ namespace Student_Management
                     str=str+ j.ToString()+"."+ i.ToString()+" ";
                     j++;
                 }
-                Console.WriteLine(str); 
+                Console.WriteLine(str);
+                int k = int.Parse(Console.ReadLine());
 
-                st.designation=Console.ReadLine();
+                st.designation = (Data_model.S_Designations)(k-1);
 
+                Console.WriteLine("Enter the Staff Passcode");
                 st.passcode=Console.ReadLine();
 
+                Console.WriteLine("Enter the Major Subject of the Teacher");
                 st.subject=Console.ReadLine();
+
+                new Staff_List<School_staff>().addDetails(st.staff_id, st);
             }
             else
             {
@@ -319,6 +324,7 @@ namespace Student_Management
     [Serializable]
     public class School_staff : Staff
     {
+        public Data_model.S_Designations designation { get; set; }
         public string subject { get; set; }
 
         
@@ -328,7 +334,7 @@ namespace Student_Management
     [Serializable]
     public class College_staff : Staff
     {
-
+        public Data_model.C_Designations designation { get; set; }
         public string department { get; set; }
         
     }
