@@ -51,6 +51,7 @@ namespace Student_Project
             }
             else if (pass.Equals(staffData[id].passcode))
             {
+                Student_Project_Main.staffData=staffData[id];
                 Console.WriteLine("Verification Success");
                 return true;
             }

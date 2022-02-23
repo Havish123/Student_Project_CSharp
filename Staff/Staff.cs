@@ -57,6 +57,7 @@ namespace Student_Project
         void addStudent();
         void removeStudent();
         void addmarkList();
+        void viewStudents();
 
     }
 
@@ -77,6 +78,42 @@ namespace Student_Project
             {
                 Console.WriteLine(staff.staff_id + " " + staff.name + " " + staff.email_id + " " + staff.phone_no + " " + staff.subject + " " + staff.designation);
             }
+        }
+
+        public void viewStudents()
+        {
+            var stList=Stud_List.getInstance().getStudList();
+            string str = "";
+            int j = 1;
+            foreach (var i in Enum.GetValues(typeof(Data_model.Standard)))
+            {
+                str = str + j.ToString() + "." + i.ToString() + " ";
+                j++;
+            }
+            Console.WriteLine(str + " " + j + ".Exit\nEnter the Student Class");
+            int k = int.Parse(Console.ReadLine());
+            var standard = (Data_model.Standard)(k - 1);
+            
+
+            foreach((var i, var list) in stList)
+            {
+                Console.WriteLine(i + " " + list.Count);
+            }
+            Console.WriteLine(standard);
+            if (!stList.ContainsKey(standard))
+            {
+                Console.WriteLine("No Student Data Found");
+            }
+            else
+            {
+                var stdata=stList[standard];
+                foreach(var i in stdata)
+                {
+                    Console.WriteLine(i.f_name + " " + i.l_name + " " + i.dob);
+                }
+                
+            }
+
         }
 
         void Staff_operations.addmarkList()
@@ -144,6 +181,7 @@ namespace Student_Project
 
         void Staff_operations.addStudent()
         {
+            Stud_List.getInstance().initializeList();
             School_student st = new School_student();
 
             Console.WriteLine("Enter the Student Register Number");
@@ -164,7 +202,7 @@ namespace Student_Project
                 str = str + j.ToString() + "." + i.ToString() + " ";
                 j++;
             }
-            Console.WriteLine(str + " " + j + ".Exit Enter the Student Class");
+            Console.WriteLine(str + " " + j + ".Exit\nEnter the Student Class");
             int k=int.Parse(Console.ReadLine());
             st.standard = (Data_model.Standard)(k - 1);
 
@@ -175,7 +213,7 @@ namespace Student_Project
                 str = str + j.ToString() + "." + i.ToString() + " ";
                 j++;
             }
-            Console.WriteLine(str + " " + j + ".Exit Enter the student Section");
+            Console.WriteLine(str + " " + j + ".Exit\nEnter the student Section");
             k = int.Parse(Console.ReadLine());
             st.section = (Data_model.Sections)(k - 1);
 
@@ -186,7 +224,7 @@ namespace Student_Project
                 str = str + j.ToString() + "." + i.ToString() + " ";
                 j++;
             }
-            Console.WriteLine(str + " " + j + ".Exit Enter your hobies");
+            Console.WriteLine(str + " " + j + ".Exit \nEnter your hobies");
             while (true)
             {
                 k = int.Parse(Console.ReadLine());

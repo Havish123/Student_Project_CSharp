@@ -16,7 +16,7 @@ namespace Student_Project
         public string l_name { get; set; }
         public DateTime dob { get; set; }
         public string description { get; set; }
-        public List<Data_model.Hobbies> hobbies { get; set; }
+        public List<Data_model.Hobbies> hobbies = new List<Data_model.Hobbies>();
         public DateTime joining_date { get; set; }
 
     }

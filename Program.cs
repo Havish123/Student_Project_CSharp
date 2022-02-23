@@ -9,7 +9,9 @@ namespace Student_Project
     {
         private static Stud_List instance = null;
         private Stud_List() { }
-        private static Dictionary<Data_model.Standard, School_student> studList = null;
+
+
+        private static Dictionary<Data_model.Standard, List<School_student>> studList = null;
 
         public static Stud_List getInstance()
         {
@@ -20,28 +22,54 @@ namespace Student_Project
             return instance;
         }
 
-        public Dictionary<Data_model.Standard, School_student> getStudList()
+        public void initializeList()
         {
             if(studList == null)
             {
-                studList = new Dictionary<Data_model.Standard, School_student>();
+                studList = new Dictionary<Data_model.Standard, List<School_student>>();
+            }
+        }
+        public Dictionary<Data_model.Standard, List<School_student>> getStudList()
+        {
+            if(studList == null)
+            {
+                studList = new Dictionary<Data_model.Standard, List<School_student>>();
                 studList=DatabaseManager.getStuData(Student_Project_Main.stu_path);
             }
             return studList;
         }
-        public void setStudList(Dictionary<Data_model.Standard, School_student> list)
+        public void setStudList(Dictionary<Data_model.Standard, List<School_student>> list)
         {
             studList = list;
         }
 
-        public School_student getDetails(Data_model.Standard id)
+        public List<School_student> getDetails(Data_model.Standard id)
         {
             return studList[id];
         }
 
         public void addDetails(Data_model.Standard sd,School_student studData)
         {
-            studList.Add(sd,studData);
+            if (studList.ContainsKey(sd))
+            {
+                if(studList[sd] == null)
+                {
+                    studList[sd]=new List<School_student>();
+                    studList[sd].Add(studData);
+                }
+                else
+                {
+                    studList[sd].Add(studData);
+                }
+            }
+            else
+            {
+                var stList= new List<School_student>();
+                stList.Add(studData);
+                studList.Add(sd,stList);
+                
+            }
+            
         }
     }
 
@@ -192,13 +220,23 @@ namespace Student_Project
             
             if (Validation.StaffVerification(id, pass))
             {
+                Stud_List.getInstance().getStudList();
+                
                 while (true)
                 {
+
                     Console.WriteLine("Enter your Option\n1.Add Student\n2.View Students\n3.Update Student Marks\n4.Update Student Average Mark\n5.Exit");
                     int sdOp=int.Parse(Console.ReadLine());
                     switch (sdOp)
                     {
-
+                        case 1:
+                            Staff_operations st = new Staff_operation();
+                            st.addStudent();
+                            break;
+                        case 2:
+                            Staff_operations st1 = new Staff_operation();
+                            st1.viewStudents();
+                            break ;
                     }
                 }
             }
