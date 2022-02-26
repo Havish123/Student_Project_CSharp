@@ -94,12 +94,7 @@ namespace Student_Project
             int k = int.Parse(Console.ReadLine());
             var standard = (Data_model.Standard)(k - 1);
             
-
-            foreach((var i, var list) in stList)
-            {
-                Console.WriteLine(i + " " + list.Count);
-            }
-            Console.WriteLine(standard);
+            
             if (!stList.ContainsKey(standard))
             {
                 Console.WriteLine("No Student Data Found");
@@ -107,9 +102,9 @@ namespace Student_Project
             else
             {
                 var stdata=stList[standard];
-                foreach(var i in stdata)
+                foreach((var i,var value) in stdata)
                 {
-                    Console.WriteLine(i.f_name + " " + i.l_name + " " + i.dob);
+                    Console.WriteLine(value.f_name + " " + value.l_name + " " + value.dob);
                 }
                 
             }
@@ -123,7 +118,7 @@ namespace Student_Project
 
         void Principal_operation.addStaff()
         {
-
+            
             if (Student_Project_Main.appInfo.org_type.Equals("School"))
             {
                 School_staff st = new School_staff();

@@ -63,14 +63,14 @@ namespace Student_Project
         }
 
         //Get the Student Data from the file
-        public static Dictionary<Data_model.Standard, List<School_student>> getStuData(string filePath)
+        public static Dictionary<Data_model.Standard, Dictionary<int, School_student>> getStuData(string filePath)
         {
             if (Validation.isDataAvailable(filePath))
             {
                 using (Stream stream = File.Open(filePath, FileMode.Open))
                 {
                     var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-                    return (Dictionary<Data_model.Standard, List<School_student>>)binaryFormatter.Deserialize(stream);
+                    return (Dictionary<Data_model.Standard, Dictionary<int, School_student>>)binaryFormatter.Deserialize(stream);
                 }
             }
             else

@@ -55,6 +55,8 @@ namespace Student_Project
         void viewAllResult();
         void sendEnquiry();
 
+        void viewDetails();
+
     }
 
 

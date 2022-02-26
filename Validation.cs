@@ -34,8 +34,10 @@ namespace Student_Project
         }
 
         //Validate the Student Login Details
-        public static bool StuVerification()
+        public static bool StuVerification(int id,string pass)
         {
+            var stData=Stud_List.getInstance().getStudList();
+
             return false;
         }
 

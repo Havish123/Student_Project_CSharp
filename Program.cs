@@ -1,6 +1,8 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using System.Collections;
+
+
 namespace Student_Project
 {
 
@@ -11,11 +13,11 @@ namespace Student_Project
         private Stud_List() { }
 
 
-        private static Dictionary<Data_model.Standard, List<School_student>> studList = null;
+        private static Dictionary<Data_model.Standard, Dictionary<int, School_student>> studList = null;
 
         public static Stud_List getInstance()
         {
-            if(instance == null)
+            if (instance == null)
             {
                 instance = new Stud_List();
             }
@@ -24,55 +26,53 @@ namespace Student_Project
 
         public void initializeList()
         {
-            if(studList == null)
+            if (studList == null)
             {
-                studList = new Dictionary<Data_model.Standard, List<School_student>>();
+                studList = new Dictionary<Data_model.Standard, Dictionary<int, School_student>>();
             }
         }
-        public Dictionary<Data_model.Standard, List<School_student>> getStudList()
+        public Dictionary<Data_model.Standard, Dictionary<int, School_student>> getStudList()
         {
-            if(studList == null)
+            if (studList == null)
             {
-                studList = new Dictionary<Data_model.Standard, List<School_student>>();
-                studList=DatabaseManager.getStuData(Student_Project_Main.stu_path);
+                studList = new Dictionary<Data_model.Standard, Dictionary<int, School_student>>();
+                studList = DatabaseManager.getStuData(Student_Project_Main.stu_path);
             }
             return studList;
         }
-        public void setStudList(Dictionary<Data_model.Standard, List<School_student>> list)
+        public void setStudList(Dictionary<Data_model.Standard, Dictionary<int, School_student>> list)
         {
             studList = list;
         }
 
-        public List<School_student> getDetails(Data_model.Standard id)
+        public Dictionary<int, School_student> getDetails(Data_model.Standard id)
         {
             return studList[id];
         }
 
-        public void addDetails(Data_model.Standard sd,School_student studData)
+        public void addDetails(Data_model.Standard sd, School_student studData)
         {
             if (studList.ContainsKey(sd))
             {
-                if(studList[sd] == null)
+                if (studList[sd] == null)
                 {
-                    studList[sd]=new List<School_student>();
-                    studList[sd].Add(studData);
+                    studList[sd] = new Dictionary<int, School_student>();
+                    studList[sd].Add(studData.reg_no, studData);
                 }
                 else
                 {
-                    studList[sd].Add(studData);
+                    studList[sd].Add(studData.reg_no, studData);
                 }
             }
             else
             {
-                var stList= new List<School_student>();
-                stList.Add(studData);
-                studList.Add(sd,stList);
-                
+                studList[sd] = new Dictionary<int, School_student>();
+                studList[sd].Add(studData.reg_no, studData);
             }
-            
-        }
-    }
 
+        }
+
+    }
     //Generic Staff Method based on Organization
     public class Staff_List
     {
@@ -86,7 +86,7 @@ namespace Student_Project
         {
             if (instance == null)
             {
-                instance=new Staff_List();   
+                instance = new Staff_List();
             }
             return instance;
         }
@@ -94,14 +94,14 @@ namespace Student_Project
         {
             if (staffList == null)
             {
-               staffList = new Dictionary<int, School_staff>();
-               staffList = DatabaseManager.getStaffData(Student_Project_Main.staff_path);
+                staffList = new Dictionary<int, School_staff>();
+                staffList = DatabaseManager.getStaffData(Student_Project_Main.staff_path);
             }
             return staffList;
         }
         public void setStaffList(Dictionary<int, School_staff> list)
         {
-            staffList=list;
+            staffList = list;
         }
         public School_staff getDetails(int id)
         {
@@ -114,7 +114,7 @@ namespace Student_Project
 
     }
 
-    
+
 
     //Main Project Method - Starting Point of Project
     public class Student_Project_Main
@@ -129,8 +129,7 @@ namespace Student_Project
 
         public static void Main(string[] args)
         {
-            var a = new string[] { "Hello" };
-            Console.WriteLine(a.Length);
+
             string path = "F:\\data\\appdata.txt";
             //Student_Management.DatabaseManager.getAppData();
             if (Validation.isDataAvailable(path))
@@ -146,7 +145,7 @@ namespace Student_Project
                 {
                     appData.org_type = "School";
                 }
-                else if(ch==2)
+                else if (ch == 2)
                 {
                     appData.org_type = "College";
                 }
@@ -154,22 +153,22 @@ namespace Student_Project
                 {
                     throw new Exception("Exited");
                 }
-                
+
                 Console.WriteLine("Enter the Organization id");
-                appData.org_id=int.Parse(Console.ReadLine());
+                appData.org_id = int.Parse(Console.ReadLine());
                 Console.WriteLine("Enter the Organization Name");
-                appData.org_name=Console.ReadLine();
+                appData.org_name = Console.ReadLine();
                 appInfo = appData;
                 DatabaseManager.storeAppData(path, appData);
 
             }
             //showOption();
             Console.WriteLine(String.Format("Welcome To Our Organization"));
-            Console.WriteLine(String.Format("{0,-5} {1,-15}", " ",appInfo.org_name));
-            
+            Console.WriteLine(String.Format("{0,-5} {1,-15}", " ", appInfo.org_name));
+
             if (appInfo.org_type == "School")
             {
-                staffData=new School_staff();
+                staffData = new School_staff();
                 stuData = new School_student();
                 showOptions();
             }
@@ -178,29 +177,29 @@ namespace Student_Project
                 staffData = new College_staff();
                 stuData = new College_student();
             }
-            
+
 
         }
 
         //Show the options for login
         public static void showOptions()
         {
-            
+
             Console.WriteLine("Select option\n1.Staff Login\n2.Student Login\n3.Exit");
             try
             {
                 authType = int.Parse(Console.ReadLine());
-                if(authType == 1)
+                if (authType == 1)
                 {
                     staffLogin();
                 }
-                else if(authType == 2)
+                else if (authType == 2)
                 {
                     studentLogin();
                 }
                 else
                 {
-                    
+
                 }
             }
             catch (FormatException e)
@@ -214,19 +213,19 @@ namespace Student_Project
         {
             Staff_List.getInstance().getStaffList();
             Console.WriteLine("Enter the Staff Id");
-            int id=int.Parse(Console.ReadLine());
+            int id = int.Parse(Console.ReadLine());
             Console.WriteLine("Enter the passcode");
-            string pass=Console.ReadLine();
-            
+            string pass = Console.ReadLine();
+
             if (Validation.StaffVerification(id, pass))
             {
                 Stud_List.getInstance().getStudList();
-                
+
                 while (true)
                 {
 
                     Console.WriteLine("Enter your Option\n1.Add Student\n2.View Students\n3.Update Student Marks\n4.Update Student Average Mark\n5.Exit");
-                    int sdOp=int.Parse(Console.ReadLine());
+                    int sdOp = int.Parse(Console.ReadLine());
                     switch (sdOp)
                     {
                         case 1:
@@ -236,7 +235,7 @@ namespace Student_Project
                         case 2:
                             Staff_operations st1 = new Staff_operation();
                             st1.viewStudents();
-                            break ;
+                            break;
                     }
                 }
             }
@@ -256,7 +255,8 @@ namespace Student_Project
             int id = int.Parse(Console.ReadLine());
             Console.WriteLine("Enter the passcode");
             string pass = Console.ReadLine();
-            Validation.StaffVerification(id, pass);
+            Validation.StuVerification(id, pass);
         }
     }
+
 }
