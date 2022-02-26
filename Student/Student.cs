@@ -19,6 +19,17 @@ namespace Student_Project
         public List<Data_model.Hobbies> hobbies = new List<Data_model.Hobbies>();
         public DateTime joining_date { get; set; }
 
+        public string getHobbies()
+        {
+            string str = "";
+            foreach (var i in hobbies)
+            {
+                str += i.ToString() + " ";
+            }
+            return str;
+        }
+
+
     }
 
     //School Student Model
@@ -29,6 +40,11 @@ namespace Student_Project
 
         public Data_model.Standard standard { get; set; }
         public Data_model.Sections section { get; set; }
+
+        public Data_model.Standard getStandard()
+        {
+            return (Data_model.Standard)standard;
+        }
 
     }
 
@@ -54,9 +70,45 @@ namespace Student_Project
         void viewMark();
         void viewAllResult();
         void sendEnquiry();
+        void viewDetails(int id, string pass);
+    }
 
-        void viewDetails();
+    class Stud_Operations : Student_operations
+    {
+        void Student_operations.sendEnquiry()
+        {
+            throw new NotImplementedException();
+        }
 
+        void Student_operations.viewAllResult()
+        {
+            throw new NotImplementedException();
+        }
+
+        void Student_operations.viewDetails(int id, string pass)
+        {
+            var list = Stud_List.getInstance().getStudList();
+            bool flag = true;
+            foreach ((var sd, var stList) in list)
+            {
+                if (stList.ContainsKey(id))
+                {
+                    if (stList[id].passcode == pass)
+                    {
+                        var st = stList[id];
+                        Console.WriteLine("Register Number: " + st.reg_no + "\nFirst Name: " + st.f_name + "\nLast Name: " + st.l_name + "\nDate of Birth: " + st.dob
+                            + "\nStudent Description: " + st.description + "\nStandard and Section: " + st.getStandard() + " " + st.section + "\nJoining Date: " + st.joining_date + "\nHobbies: " + st.getHobbies());
+                    }
+
+                }
+
+            }
+        }
+
+        void Student_operations.viewMark()
+        {
+            throw new NotImplementedException();
+        }
     }
 
 

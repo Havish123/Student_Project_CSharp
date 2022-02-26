@@ -39,7 +39,7 @@ namespace Student_Project
         //Standart List if application use in Schools
         public enum Standard
         {
-            First = 1,
+            First,
             Second,
             Third,
             Fourth,

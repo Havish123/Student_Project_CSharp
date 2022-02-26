@@ -197,9 +197,13 @@ namespace Student_Project
                 {
                     studentLogin();
                 }
+                else if (authType == 3)
+                {
+                    Console.WriteLine("Thank You");
+                }
                 else
                 {
-
+                    Console.WriteLine("Please Enter the Correct Option");
                 }
             }
             catch (FormatException e)
@@ -217,11 +221,11 @@ namespace Student_Project
             Console.WriteLine("Enter the passcode");
             string pass = Console.ReadLine();
 
-            if (Validation.StaffVerification(id, pass))
+            if (Validation.StaffVerification(id, pass) && login)
             {
                 Stud_List.getInstance().getStudList();
 
-                while (true)
+                while (login)
                 {
 
                     Console.WriteLine("Enter your Option\n1.Add Student\n2.View Students\n3.Update Student Marks\n4.Update Student Average Mark\n5.Exit");
@@ -235,6 +239,9 @@ namespace Student_Project
                         case 2:
                             Staff_operations st1 = new Staff_operation();
                             st1.viewStudents();
+                            break;
+                        case 5:
+                            login = false;
                             break;
                     }
                 }
@@ -255,7 +262,37 @@ namespace Student_Project
             int id = int.Parse(Console.ReadLine());
             Console.WriteLine("Enter the passcode");
             string pass = Console.ReadLine();
-            Validation.StuVerification(id, pass);
+
+
+            if (Validation.StuVerification(id, pass) && login)
+            {
+                Stud_List.getInstance().getStudList();
+
+                while (login)
+                {
+
+                    Console.WriteLine("\nEnter your Option\n1.View Profile\n2.View Marks\n3.Submit Assignment Mark\n4.View Overall Details\n5.Exit");
+                    int sdOp = int.Parse(Console.ReadLine());
+                    switch (sdOp)
+                    {
+                        case 1:
+                            Student_operations st = new Stud_Operations();
+                            st.viewDetails(id, pass);
+                            break;
+                        case 2:
+                            Staff_operations st1 = new Staff_operation();
+                            st1.viewStudents();
+                            break;
+                        case 5:
+                            login = false;
+                            break;
+                    }
+                }
+            }
+            else
+            {
+
+            }
         }
     }
 

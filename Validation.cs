@@ -34,15 +34,35 @@ namespace Student_Project
         }
 
         //Validate the Student Login Details
-        public static bool StuVerification(int id,string pass)
+        public static bool StuVerification(int id, string pass)
         {
-            var stData=Stud_List.getInstance().getStudList();
+            var stData = Stud_List.getInstance().getStudList();
+            bool flag = true;
+            foreach ((var sd, var stList) in stData)
+            {
+                if (stList.ContainsKey(id))
+                {
+                    if (stList[id].passcode == pass)
+                    {
+                        Console.WriteLine("Verification Success");
+                        Student_Project_Main.login = true;
+                        return true;
+                    }
+
+                }
+                else
+                {
+                    continue;
+                }
+            }
+
+            Console.WriteLine("No Student Data found... \nCheck your Details or Contact your Staff...");
 
             return false;
         }
 
         //Validate the Staff Login Details
-        public static bool StaffVerification(int id,string pass)
+        public static bool StaffVerification(int id, string pass)
         {
             var staffData = Staff_List.getInstance().getStaffList();
 
@@ -53,8 +73,9 @@ namespace Student_Project
             }
             else if (pass.Equals(staffData[id].passcode))
             {
-                Student_Project_Main.staffData=staffData[id];
+                Student_Project_Main.staffData = staffData[id];
                 Console.WriteLine("Verification Success");
+                Student_Project_Main.login = true;
                 return true;
             }
             Console.WriteLine("Invalid Password...");
