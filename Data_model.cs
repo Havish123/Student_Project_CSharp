@@ -26,14 +26,14 @@ namespace Student_Project
         }
 
         //Departments List if application use in College
-        Dictionary<string, string> departments = new Dictionary<string, string>()
+        Dictionary<int, string> departments = new Dictionary<int, string>()
         {
-            {"MECH","Mechanical Engineering" },
-            {"CSE","Computer Science Engineering" },
-            {"CIVIL","Civil Engineering" },
-            {"EEE","Electrical and Electronics Engineering" },
-            {"ECE","Electronics and Communication Engineering" },
-            {"AE","Aeronautical Engineering" }
+            {101,"Mechanical Engineering" },
+            {102,"Computer Science Engineering" },
+            {103,"Civil Engineering" },
+            {104,"Electrical and Electronics Engineering" },
+            {105,"Electronics and Communication Engineering" },
+            {106,"Aeronautical Engineering" }
         };
 
         //Standart List if application use in Schools

@@ -90,7 +90,7 @@ namespace Student_Project
                 str = str + j.ToString() + "." + i.ToString() + " ";
                 j++;
             }
-            Console.WriteLine(str + " " + j + ".Exit\nEnter the Student Class");
+            Console.WriteLine(str + " " + j + ".Exit\nEnter the Student Department");
             int k = int.Parse(Console.ReadLine());
             var standard = (Data_model.Standard)(k - 1);
             
@@ -121,7 +121,7 @@ namespace Student_Project
             
             if (Student_Project_Main.appInfo.org_type.Equals("School"))
             {
-                School_staff st = new School_staff();
+                School_staff st = new College_staff();
 
                 Console.WriteLine("Enter the Staff_id");
                 st.staff_id = int.Parse(Console.ReadLine());
