@@ -63,19 +63,20 @@ namespace Student_Project
         }
 
         //Get the Student Data from the file
-        public static Dictionary<Data_model.Standard, Dictionary<int, School_student>> getStuData(string filePath)
+        public static Dictionary<string, Dictionary<int, College_student>> getStuData(string filePath)
         {
             if (Validation.isDataAvailable(filePath))
             {
+
                 using (Stream stream = File.Open(filePath, FileMode.Open))
                 {
                     var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-                    return (Dictionary<Data_model.Standard, Dictionary<int, School_student>>)binaryFormatter.Deserialize(stream);
+                    return (Dictionary<string, Dictionary<int, College_student>>)binaryFormatter.Deserialize(stream);
                 }
             }
             else
             {
-                if(Student_Project_Main.authType == 1)
+                if (Student_Project_Main.authType == 1)
                 {
                     Console.WriteLine("No student Data found");
                     //Staff_operations st=new Staff_operation();
@@ -85,7 +86,7 @@ namespace Student_Project
                 {
                     Console.WriteLine("No student Data found");
                 }
-                
+
                 Console.WriteLine("No Student Data Available! Please Contact your Staff");
                 return null;
             }
@@ -93,14 +94,14 @@ namespace Student_Project
         }
 
         //Get the staff Details from the file
-        public static Dictionary<int, School_staff> getStaffData(string filePath)
+        public static Dictionary<int, College_staff> getStaffData(string filePath)
         {
             if (Validation.isDataAvailable(filePath))
             {
                 using (Stream stream = File.Open(filePath, FileMode.Open))
                 {
                     var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-                    return (Dictionary<int, School_staff>)binaryFormatter.Deserialize(stream);
+                    return (Dictionary<int, College_staff>)binaryFormatter.Deserialize(stream);
                 }
             }
             else
