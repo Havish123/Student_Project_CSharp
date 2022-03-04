@@ -74,39 +74,42 @@ namespace Student_Project
         public void showStaffs()
         {
             var staffList = Staff_List.getInstance().getStaffList();
-            foreach ((int id, School_staff staff) in staffList)
+            foreach ((int id, College_staff staff) in staffList)
             {
-                Console.WriteLine(staff.staff_id + " " + staff.name + " " + staff.email_id + " " + staff.phone_no + " " + staff.subject + " " + staff.designation);
+                Console.WriteLine(staff.staff_id + " " + staff.name + " " + staff.email_id + " " + staff.phone_no + " " + staff.department + " " + staff.designation);
             }
         }
 
         public void viewStudents()
         {
-            var stList=Stud_List.getInstance().getStudList();
+            var stList = Stud_List.getInstance().getStudList();
+
+            var departments = Data_model.getInstance().departments;
             string str = "";
             int j = 1;
-            foreach (var i in Enum.GetValues(typeof(Data_model.Standard)))
+
+            foreach (var i in departments)
             {
-                str = str + j.ToString() + "." + i.ToString() + " ";
+                str = str + j.ToString() + "." + i.Value.ToString() + " ";
                 j++;
             }
             Console.WriteLine(str + " " + j + ".Exit\nEnter the Student Department");
             int k = int.Parse(Console.ReadLine());
-            var standard = (Data_model.Standard)(k - 1);
-            
-            
+            var standard = departments[0];
+
+
             if (!stList.ContainsKey(standard))
             {
                 Console.WriteLine("No Student Data Found");
             }
             else
             {
-                var stdata=stList[standard];
-                foreach((var i,var value) in stdata)
+                var stdata = stList[standard];
+                foreach ((var i, var value) in stdata)
                 {
                     Console.WriteLine(value.f_name + " " + value.l_name + " " + value.dob);
                 }
-                
+
             }
 
         }
@@ -118,7 +121,7 @@ namespace Student_Project
 
         void Principal_operation.addStaff()
         {
-            
+
             if (Student_Project_Main.appInfo.org_type.Equals("School"))
             {
                 School_staff st = new College_staff();
@@ -198,7 +201,7 @@ namespace Student_Project
                 j++;
             }
             Console.WriteLine(str + " " + j + ".Exit\nEnter the Student Class");
-            int k=int.Parse(Console.ReadLine());
+            int k = int.Parse(Console.ReadLine());
             st.standard = (Data_model.Standard)(k - 1);
 
             str = "";
@@ -239,7 +242,7 @@ namespace Student_Project
             }
             Console.WriteLine("Enter the Student Passcode");
             st.passcode = Console.ReadLine();
-            
+
             st.average_mark = 0;
             st.joining_date = DateTime.Today;
 

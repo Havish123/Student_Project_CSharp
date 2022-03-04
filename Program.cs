@@ -13,7 +13,7 @@ namespace Student_Project
         private Stud_List() { }
 
 
-        private static Dictionary<Data_model.Standard, Dictionary<int, School_student>> studList = null;
+        private static Dictionary<string, Dictionary<int, College_student>> studList = null;
 
         public static Stud_List getInstance()
         {
@@ -28,35 +28,35 @@ namespace Student_Project
         {
             if (studList == null)
             {
-                studList = new Dictionary<Data_model.Standard, Dictionary<int, School_student>>();
+                studList = new Dictionary<string, Dictionary<int, College_student>>();
             }
         }
-        public Dictionary<Data_model.Standard, Dictionary<int, School_student>> getStudList()
+        public Dictionary<string, Dictionary<int, College_student>> getStudList()
         {
             if (studList == null)
             {
-                studList = new Dictionary<Data_model.Standard, Dictionary<int, School_student>>();
+                studList = new Dictionary<string, Dictionary<int, College_student>>();
                 studList = DatabaseManager.getStuData(Student_Project_Main.stu_path);
             }
             return studList;
         }
-        public void setStudList(Dictionary<Data_model.Standard, Dictionary<int, School_student>> list)
+        public void setStudList(Dictionary<string, Dictionary<int, College_student>> list)
         {
             studList = list;
         }
 
-        public Dictionary<int, School_student> getDetails(Data_model.Standard id)
+        public Dictionary<int, College_student> getDetails(string id)
         {
             return studList[id];
         }
 
-        public void addDetails(Data_model.Standard sd, School_student studData)
+        public void addDetails(string sd, College_student studData)
         {
             if (studList.ContainsKey(sd))
             {
                 if (studList[sd] == null)
                 {
-                    studList[sd] = new Dictionary<int, School_student>();
+                    studList[sd] = new Dictionary<int, College_student>();
                     studList[sd].Add(studData.reg_no, studData);
                 }
                 else
@@ -66,7 +66,7 @@ namespace Student_Project
             }
             else
             {
-                studList[sd] = new Dictionary<int, School_student>();
+                studList[sd] = new Dictionary<int, College_student>();
                 studList[sd].Add(studData.reg_no, studData);
             }
 
@@ -78,7 +78,7 @@ namespace Student_Project
     {
         private static Staff_List instance = null;
 
-        private static Dictionary<int, School_staff> staffList = null;
+        private static Dictionary<int, College_staff> staffList = null;
 
         public Staff_List() { }
 
@@ -90,24 +90,24 @@ namespace Student_Project
             }
             return instance;
         }
-        public Dictionary<int, School_staff> getStaffList()
+        public Dictionary<int, College_staff> getStaffList()
         {
             if (staffList == null)
             {
-                staffList = new Dictionary<int, School_staff>();
+                staffList = new Dictionary<int, College_staff>();
                 staffList = DatabaseManager.getStaffData(Student_Project_Main.staff_path);
             }
             return staffList;
         }
-        public void setStaffList(Dictionary<int, School_staff> list)
+        public void setStaffList(Dictionary<int, College_staff> list)
         {
             staffList = list;
         }
-        public School_staff getDetails(int id)
+        public College_staff getDetails(int id)
         {
             return staffList[id];
         }
-        public void addDetails(int id, School_staff staffData)
+        public void addDetails(int id, College_staff staffData)
         {
             staffList.Add(id, staffData);
         }
@@ -122,14 +122,15 @@ namespace Student_Project
         public static AppData appInfo;
         public static int authType;
         public static bool login = false;
-        public static Staff staffData = null;
-        public static Student stuData = null;
+        public static College_staff staffData = null;
+        public static College_student stuData = null;
         public static string stu_path = "F:\\data\\student.txt";
         public static string staff_path = "F:\\data\\staff.txt";
 
         public static void Main(string[] args)
         {
-
+            SQLDatabaseManager.getInstance().createDatabase();
+            SQLDatabaseManager.getInstance().createTable();
             string path = "F:\\data\\appdata.txt";
             //Student_Management.DatabaseManager.getAppData();
             if (Validation.isDataAvailable(path))
@@ -168,14 +169,14 @@ namespace Student_Project
 
             if (appInfo.org_type == "School")
             {
-                staffData = new School_staff();
-                stuData = new School_student();
+                staffData = new College_staff();
+                stuData = new College_student();
                 showOptions();
             }
             else
             {
-                staffData = new College_staff();
-                stuData = new College_student();
+                //staffData = new College_staff();
+                //stuData = new College_student();
             }
 
 
@@ -224,7 +225,11 @@ namespace Student_Project
             if (Validation.StaffVerification(id, pass) && login)
             {
                 Stud_List.getInstance().getStudList();
+                if (staffData.designation.Equals("Principal"))
+                {
+                    Console.WriteLine("Enter your Option\n1.Add Staff\n2.Update Salary\n3.Add Student\n4.View Students\n5.Update Student Marks\n6.Update Student Average Mark\n5.Exit");
 
+                }
                 while (login)
                 {
 
