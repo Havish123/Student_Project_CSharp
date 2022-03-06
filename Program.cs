@@ -122,6 +122,7 @@ namespace Student_Project
         public static AppData appInfo;
         public static int authType;
         public static bool login = false;
+        public static bool home = false;
         public static College_staff staffData = null;
         public static College_student stuData = null;
         public static string stu_path = "F:\\data\\student.txt";
@@ -193,38 +194,57 @@ namespace Student_Project
             {
                 case 1:
                     break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    home=true;
+                    break;
+
             }
         }
 
         //Show the options for login
         public static void showOptions()
         {
+            while (!home)
+            {
+                Console.WriteLine("Select option\n1.Staff Login\n2.Student Login\n3.Exit");
+                try
+                {
+                    authType = int.Parse(Console.ReadLine());
+                    if (authType == 1)
+                    {
+                        staffLogin();
+                    }
+                    else if (authType == 2)
+                    {
+                        studentLogin();
+                    }
+                    else if (authType == 5)
+                    {
+                        adminLogin();
+                    }
+                    else if (authType == 3)
+                    {
+                        home = true;
+                        Console.WriteLine("Thank You");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Please Enter the Correct Option");
+                    }
+                }
+                catch (FormatException e)
+                {
+                    Console.WriteLine("Please Enter valid input" + e);
+                }
+            }
 
-            Console.WriteLine("Select option\n1.Staff Login\n2.Student Login\n3.Exit");
-            try
-            {
-                authType = int.Parse(Console.ReadLine());
-                if (authType == 1)
-                {
-                    staffLogin();
-                }
-                else if (authType == 2)
-                {
-                    studentLogin();
-                }
-                else if (authType == 3)
-                {
-                    Console.WriteLine("Thank You");
-                }
-                else
-                {
-                    Console.WriteLine("Please Enter the Correct Option");
-                }
-            }
-            catch (FormatException e)
-            {
-                Console.WriteLine("Please Enter valid input" + e);
-            }
+            
         }
 
         //Verify the staff Login details
@@ -271,6 +291,31 @@ namespace Student_Project
 
             }
 
+        }
+
+        //Verify Admin Details
+        public static void adminLogin()
+        {
+            Console.WriteLine("Enter the Admin Id");
+            int ad_id=int.Parse(Console.ReadLine());
+            Console.WriteLine("Enter the Adming Password");
+            string pass=Console.ReadLine();
+            if (ad_id == 1099)
+            {
+                if(pass == "adminshaa")
+                {
+                    Console.WriteLine("Login As Admin Successfully");
+                    adminOptions();
+                }
+                else
+                {
+                    Console.WriteLine("Incorrect Password.Please Try Again...");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Incorrect Login Id..Please Try Again later");
+            }
         }
 
         //Verify the Student Details
