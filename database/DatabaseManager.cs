@@ -4,21 +4,29 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
+
 namespace Student_Project
 {
+    
     //Data Manager for perform File Operations
     public class DatabaseManager
     {
-
+        public void view(int id)
+        {
+            Console.WriteLine("Welcome ");
+        }
         //Store the Application Details in the file
-        public static void storeAppData(string path, AppData data, bool append = false)
+         public static void storeAppData(string path, AppData data, bool append = false)
         {
             using (Stream stream = File.Open(path, append ? FileMode.Append : FileMode.Create))
             {
                 var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
                 binaryFormatter.Serialize(stream, data);
+        
             }
         }
+        
 
         //Store the Student Details in the file
         public static void storeStuData()
@@ -63,7 +71,7 @@ namespace Student_Project
         }
 
         //Get the Student Data from the file
-        public static Dictionary<string, Dictionary<int, College_student>> getStuData(string filePath)
+        public static Dictionary<int, Dictionary<int, College_student>> getStuData(string filePath)
         {
             if (Validation.isDataAvailable(filePath))
             {
@@ -71,7 +79,7 @@ namespace Student_Project
                 using (Stream stream = File.Open(filePath, FileMode.Open))
                 {
                     var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-                    return (Dictionary<string, Dictionary<int, College_student>>)binaryFormatter.Deserialize(stream);
+                    return (Dictionary<int, Dictionary<int, College_student>>)binaryFormatter.Deserialize(stream);
                 }
             }
             else
@@ -132,5 +140,13 @@ namespace Student_Project
 
         }
 
+        public void storeAppData()
+        {
+            throw new NotImplementedException();
+        }
+
+        
     }
+
+    
 }

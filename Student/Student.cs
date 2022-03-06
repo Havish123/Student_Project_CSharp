@@ -16,20 +16,19 @@ namespace Student_Project
         public string l_name { get; set; }
         public DateTime dob { get; set; }
         public string description { get; set; }
-        public List<Data_model.Hobbies> hobbies = new List<Data_model.Hobbies>();
+        
+
         public DateTime joining_date { get; set; }
 
-        public string getHobbies()
-        {
-            string str = "";
-            foreach (var i in hobbies)
-            {
-                str += i.ToString() + " ";
-            }
-            return str;
-        }
+        public Hobbies hobbies;
+        
 
 
+    }
+    public class Hobbies
+    {
+        public int hob_id { get; set; }
+        public string hob_name { get; set; }
     }
 
     //School Student Model
@@ -52,16 +51,21 @@ namespace Student_Project
     [Serializable]
     public class College_student : Student
     {
-        public string department { get; set; }
-        public string email_id { get; set; }
+        public Departments departments { get; set; }
+        public string email { get; set; }
         public long phone_no { get; set; }
-        public float x_mark { get; set; }
-        public float xii_mark { get; set; }
-        public float curr_cgpa { get; set; }
-        public int total_cgpa { get; set; }
+        public float SSLC_Mark { get; set; }
+        public float HSC_mark { get; set; }
+        public float cgpa { get; set; }
 
 
     }
+    public class Departments
+    {
+        public int dep_id { get; set; }
+        public string dep_name { get; set; }
+    }
+
 
 
     //Student options
@@ -97,7 +101,7 @@ namespace Student_Project
                     {
                         var st = stList[id];
                         Console.WriteLine("Register Number: " + st.reg_no + "\nFirst Name: " + st.f_name + "\nLast Name: " + st.l_name + "\nDate of Birth: " + st.dob
-                            + "\nStudent Description: " + st.description + "\nStandard and Section: " + st.getStandard() + " " + st.section + "\nJoining Date: " + st.joining_date + "\nHobbies: " + st.getHobbies());
+                            + "\nStudent Description: " + st.description + "\nDepartments :\nJoining Date: " + st.joining_date + "\nHobbies: ");
                     }
 
                 }

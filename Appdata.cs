@@ -6,13 +6,12 @@ using System.Threading.Tasks;
 
 namespace Student_Project
 {
-    //Serializable Model for Application Details
-    [Serializable]
+    
     public class AppData
     {
-        public int org_id { get; set; }
-        public string org_type { get; set; }
-        public string org_name { get; set; }
+        public int Organization_id { get; set; }
+        public string Organization_type { get; set; }
+        public string Organization_name { get; set; }
 
     }
 }

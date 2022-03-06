@@ -26,7 +26,7 @@ namespace Student_Project
         }
 
         //Departments List if application use in College
-        Dictionary<string, string> departments = new Dictionary<string, string>()
+        public Dictionary<int, string> departments = new Dictionary<int, string>()
         {
             {101,"Mechanical Engineering" },
             {102,"Computer Science Engineering" },

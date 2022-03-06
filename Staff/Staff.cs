@@ -95,16 +95,16 @@ namespace Student_Project
             }
             Console.WriteLine(str + " " + j + ".Exit\nEnter the Student Department");
             int k = int.Parse(Console.ReadLine());
-            var standard = departments[0];
+            var standard = departments[k];
 
 
-            if (!stList.ContainsKey(standard))
+            if (!stList.ContainsKey(k))
             {
                 Console.WriteLine("No Student Data Found");
             }
             else
             {
-                var stdata = stList[standard];
+                var stdata = stList[k];
                 foreach ((var i, var value) in stdata)
                 {
                     Console.WriteLine(value.f_name + " " + value.l_name + " " + value.dob);
@@ -122,9 +122,9 @@ namespace Student_Project
         void Principal_operation.addStaff()
         {
 
-            if (Student_Project_Main.appInfo.org_type.Equals("School"))
+            if (Student_Project_Main.appInfo.Organization_type.Equals("School"))
             {
-                School_staff st = new College_staff();
+                 College_staff st = new College_staff();
 
                 Console.WriteLine("Enter the Staff_id");
                 st.staff_id = int.Parse(Console.ReadLine());
@@ -158,13 +158,13 @@ namespace Student_Project
                 Console.WriteLine(str);
                 int k = int.Parse(Console.ReadLine());
 
-                st.designation = (Data_model.S_Designations)(k - 1);
+                st.designation = (Data_model.C_Designations)(k - 1);
 
                 Console.WriteLine("Enter the Staff Passcode");
                 st.passcode = Console.ReadLine();
 
-                Console.WriteLine("Enter the Major Subject of the Teacher");
-                st.subject = Console.ReadLine();
+                //Console.WriteLine("Enter the Major Subject of the Teacher");
+                //st. = Console.ReadLine();
 
                 Staff_List.getInstance().addDetails(st.staff_id, st);
                 DatabaseManager.storeStaffData();
@@ -180,7 +180,7 @@ namespace Student_Project
         void Staff_operations.addStudent()
         {
             Stud_List.getInstance().initializeList();
-            School_student st = new School_student();
+            College_student st = new College_student();
 
             Console.WriteLine("Enter the Student Register Number");
             st.reg_no = int.Parse(Console.ReadLine());
@@ -202,7 +202,7 @@ namespace Student_Project
             }
             Console.WriteLine(str + " " + j + ".Exit\nEnter the Student Class");
             int k = int.Parse(Console.ReadLine());
-            st.standard = (Data_model.Standard)(k - 1);
+            //st.standard = (Data_model.Standard)(k - 1);
 
             str = "";
             j = 1;
@@ -213,7 +213,7 @@ namespace Student_Project
             }
             Console.WriteLine(str + " " + j + ".Exit\nEnter the student Section");
             k = int.Parse(Console.ReadLine());
-            st.section = (Data_model.Sections)(k - 1);
+            //st.section = (Data_model.Sections)(k - 1);
 
             str = "";
             j = 1;
@@ -227,7 +227,7 @@ namespace Student_Project
             {
                 k = int.Parse(Console.ReadLine());
 
-                if (k == j && st.hobbies.Any())
+                if (k == j )
                 {
                     break;
                 }
@@ -237,16 +237,16 @@ namespace Student_Project
                 }
                 else
                 {
-                    st.hobbies.Add((Data_model.Hobbies)(k - 1));
+                    //st.hobbies.Add((Data_model.Hobbies)(k - 1));
                 }
             }
             Console.WriteLine("Enter the Student Passcode");
             st.passcode = Console.ReadLine();
 
-            st.average_mark = 0;
+            //st.average_mark = 0;
             st.joining_date = DateTime.Today;
 
-            Stud_List.getInstance().addDetails(st.standard, st);
+            Stud_List.getInstance().addDetails(1, st);
             DatabaseManager.storeStuData();
         }
 

@@ -13,7 +13,7 @@ namespace Student_Project
         private Stud_List() { }
 
 
-        private static Dictionary<string, Dictionary<int, College_student>> studList = null;
+        private static Dictionary<int, Dictionary<int, College_student>> studList = null;
 
         public static Stud_List getInstance()
         {
@@ -28,46 +28,46 @@ namespace Student_Project
         {
             if (studList == null)
             {
-                studList = new Dictionary<string, Dictionary<int, College_student>>();
+                studList = new Dictionary<int, Dictionary<int, College_student>>();
             }
         }
-        public Dictionary<string, Dictionary<int, College_student>> getStudList()
+        public Dictionary<int, Dictionary<int, College_student>> getStudList()
         {
             if (studList == null)
             {
-                studList = new Dictionary<string, Dictionary<int, College_student>>();
+                studList = new Dictionary<int, Dictionary<int, College_student>>();
                 studList = DatabaseManager.getStuData(Student_Project_Main.stu_path);
             }
             return studList;
         }
-        public void setStudList(Dictionary<string, Dictionary<int, College_student>> list)
+        public void setStudList(Dictionary<int, Dictionary<int, College_student>> list)
         {
             studList = list;
         }
 
-        public Dictionary<int, College_student> getDetails(string id)
+        public Dictionary<int, College_student> getDetails(int id)
         {
             return studList[id];
         }
 
-        public void addDetails(string sd, College_student studData)
+        public void addDetails(int key, College_student studData)
         {
-            if (studList.ContainsKey(sd))
+            if (studList.ContainsKey(key))
             {
-                if (studList[sd] == null)
+                if (studList[key] == null)
                 {
-                    studList[sd] = new Dictionary<int, College_student>();
-                    studList[sd].Add(studData.reg_no, studData);
+                    studList[key] = new Dictionary<int, College_student>();
+                    studList[key].Add(studData.reg_no, studData);
                 }
                 else
                 {
-                    studList[sd].Add(studData.reg_no, studData);
+                    studList[key].Add(studData.reg_no, studData);
                 }
             }
             else
             {
-                studList[sd] = new Dictionary<int, College_student>();
-                studList[sd].Add(studData.reg_no, studData);
+                studList[key] = new Dictionary<int, College_student>();
+                studList[key].Add(studData.reg_no, studData);
             }
 
         }
@@ -131,11 +131,13 @@ namespace Student_Project
         {
             SQLDatabaseManager.getInstance().createDatabase();
             SQLDatabaseManager.getInstance().createTable();
+
             string path = "F:\\data\\appdata.txt";
-            //Student_Management.DatabaseManager.getAppData();
-            if (Validation.isDataAvailable(path))
+
+            if (SQLDatabaseManager.Validation.getInstance().isDataAvailable())
             {
-                appInfo = DatabaseManager.getAppData(path);
+                appInfo = SQLDatabaseManager.GetData.getInstance().getAppdata();
+                //SQLDatabaseManager.GetData.getInstance().getStudDataAsync();
             }
             else
             {
@@ -144,11 +146,11 @@ namespace Student_Project
                 int ch = int.Parse(Console.ReadLine());
                 if (ch == 1)
                 {
-                    appData.org_type = "School";
+                    appData.Organization_type = "School";
                 }
                 else if (ch == 2)
                 {
-                    appData.org_type = "College";
+                    appData.Organization_type = "College";
                 }
                 else
                 {
@@ -156,18 +158,19 @@ namespace Student_Project
                 }
 
                 Console.WriteLine("Enter the Organization id");
-                appData.org_id = int.Parse(Console.ReadLine());
+                appData.Organization_id = int.Parse(Console.ReadLine());
                 Console.WriteLine("Enter the Organization Name");
-                appData.org_name = Console.ReadLine();
+                appData.Organization_name = Console.ReadLine();
                 appInfo = appData;
-                DatabaseManager.storeAppData(path, appData);
+                SQLDatabaseManager.StoreData.getInstance().storeAppdata(appData);
+                //DatabaseManager.storeAppData(path, appData);
 
             }
             //showOption();
             Console.WriteLine(String.Format("Welcome To Our Organization"));
-            Console.WriteLine(String.Format("{0,-5} {1,-15}", " ", appInfo.org_name));
+            Console.WriteLine(String.Format("{0,-5} {1,-15}", " ", appInfo.Organization_name));
 
-            if (appInfo.org_type == "School")
+            if (appInfo.Organization_type == "School")
             {
                 staffData = new College_staff();
                 stuData = new College_student();
@@ -175,11 +178,22 @@ namespace Student_Project
             }
             else
             {
-                //staffData = new College_staff();
-                //stuData = new College_student();
+                staffData = new College_staff();
+                stuData = new College_student();
+                showOptions();
             }
 
 
+        }
+        public static void adminOptions()
+        {
+            Console.WriteLine("Select Option \n1.Update Application Details\n2.Add Departmetns List\n3.Add Hobbies\n4.Add Designations\n5.Exit");
+            int ch=int.Parse(Console.ReadLine());
+            switch (ch)
+            {
+                case 1:
+                    break;
+            }
         }
 
         //Show the options for login
@@ -222,7 +236,8 @@ namespace Student_Project
             Console.WriteLine("Enter the passcode");
             string pass = Console.ReadLine();
 
-            if (Validation.StaffVerification(id, pass) && login)
+            //if (Validation.StaffVerification(id, pass) && login)
+            if (SQLDatabaseManager.Validation.getInstance().isDataAvailable())
             {
                 Stud_List.getInstance().getStudList();
                 if (staffData.designation.Equals("Principal"))
