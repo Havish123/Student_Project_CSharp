@@ -186,27 +186,7 @@ namespace Student_Project
 
 
         }
-        public static void adminOptions()
-        {
-            Console.WriteLine("Select Option \n1.Update Application Details\n2.Add Departmetns List\n3.Add Hobbies\n4.Add Designations\n5.Exit");
-            int ch=int.Parse(Console.ReadLine());
-            switch (ch)
-            {
-                case 1:
-                    break;
-                case 2:
-                    break;
-                case 3:
-                    break;
-                case 4:
-                    break;
-                case 5:
-                    home=true;
-                    break;
-
-            }
-        }
-
+       
         //Show the options for login
         public static void showOptions()
         {
@@ -246,6 +226,54 @@ namespace Student_Project
 
             
         }
+        //Admin Login Options
+        public static void adminOptions()
+        {
+            Console.WriteLine("Select Option \n1.Update Application Details\n2.Add Departmetns List\n3.Add Hobbies\n4.Add Designations\n5.Exit");
+            int ch = int.Parse(Console.ReadLine());
+            switch (ch)
+            {
+                case 1:
+                    break;
+                case 2:
+                    Console.WriteLine("How many Departments Do you want to insert");
+                    int count=int.Parse(Console.ReadLine());
+                    List<Departments> depList=new List<Departments>();
+                    for(int i=0;i<count; i++)
+                    {
+                        Departments dep=new Departments();
+                        Console.WriteLine("Enter the Department Id");
+                        dep.dep_id=int.Parse(Console.ReadLine());
+                        Console.WriteLine("Enter the Department Name");
+                        dep.dep_name=Console.ReadLine();
+                        depList.Add(dep);
+                    }
+                    SQLDatabaseManager.StoreData.getInstance().storeDepData(depList);
+                    break;
+                case 3:
+                    Console.WriteLine("How many Hobbies Do you want to insert");
+                    count = int.Parse(Console.ReadLine());
+                    List<Hobbies> hobList = new List<Hobbies>();
+                    for (int i = 0; i < count; i++)
+                    {
+                        Hobbies hob = new Hobbies();
+                        Console.WriteLine("Enter the Hobbie Id");
+                        hob.hob_id = int.Parse(Console.ReadLine());
+                        Console.WriteLine("Enter the Hobbie Name");
+                        hob.hob_name = Console.ReadLine();
+                        hobList.Add(hob);
+                    }
+                    SQLDatabaseManager.StoreData.getInstance().storeHobData(hobList);
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    home = true;
+                    break;
+
+            }
+        }
+
 
         //Verify the staff Login details
         public static void staffLogin()

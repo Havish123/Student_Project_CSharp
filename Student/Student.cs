@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 namespace Student_Project
 {
     //Student Base Class
-    [Serializable]
     public class Student
     {
         public int reg_no { get; set; }
@@ -32,7 +31,6 @@ namespace Student_Project
     }
 
     //School Student Model
-    [Serializable]
     public class School_student : Student
     {
         public float average_mark { get; set; }
@@ -48,7 +46,6 @@ namespace Student_Project
     }
 
     //College Student Model
-    [Serializable]
     public class College_student : Student
     {
         public Departments departments { get; set; }

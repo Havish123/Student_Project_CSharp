@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
+using Z.Dapper.Plus;
 
 namespace Student_Project
 {
@@ -41,143 +42,6 @@ namespace Student_Project
             conn.Close();
         }
 
-        public void openCon()
-        {
-            string connStringSQL = $"Server=UNVPNSI456L2824;Database={new SQLDatabase().DatabaseName};User Id=sa;Password=10107@Havish;";
-            conn = new SqlConnection(connStringSQL);
-            conn.Open();
-        }
-
-        public void closeCon()
-        {
-            conn.Close();
-        }
-
-        public class GetData
-        {
-            public static GetData instance = null;
-            public SQLDatabaseManager sqlmngr = SQLDatabaseManager.getInstance();
-            public static GetData getInstance()
-            {
-                if(instance == null)
-                {
-                    instance=new GetData();
-                }
-                return instance ;
-            }
-
-            public AppData getAppdata()
-            {
-                //Console.WriteLine("Hi");
-                var apptable = new SQLDatabase.App_table();
-                sqlmngr.openCon();
-                var conn = SQLDatabaseManager.getInstance().conn;
-                var appdata = conn.QueryFirst<AppData>($"SELECT * FROM {apptable.table};");
-                //Console.WriteLine(appdata.Organization_name+"hi");
-                sqlmngr.closeCon();
-                return appdata ;
-            }
-
-            public async void getStudDataAsync()
-            {
-
-                var studTable = new SQLDatabase.Student_table();
-                var depTable = new SQLDatabase.departments();
-                var hobTable = new SQLDatabase.Hobbies();
-                sqlmngr.openCon();
-                var conn = SQLDatabaseManager.getInstance().conn;
-                string sql = $"SELECT * FROM {studTable.Table_Name} s INNER JOIN {hobTable.table} h ON s.{studTable.hob_id}=h.{hobTable.id} INNER JOIN {depTable.table} d ON s.{studTable.dep_id}=d.{depTable.id};";
-                Console.WriteLine(sql);
-                var studdata =await conn.QueryAsync<College_student,Hobbies,Departments, Student>(sql, (student,hobbies,departments) =>
-                    {
-                        student.departments= departments;
-                        student.hobbies = hobbies;
-                        return student;
-                    }, 
-                    splitOn: "hob_id,dep_id"
-                    ) ;
-                var stList=studdata.ToList();
-                foreach(var st in stList)
-                {
-                    Console.WriteLine(st.f_name+" "+st.hobbies.hob_name);
-                }
-                sqlmngr.closeCon();
-                //return studdata;
-            }
-        }
-
-        public class StoreData
-        {
-            public static StoreData instance = null;
-
-            public SQLDatabaseManager sqlmngr = SQLDatabaseManager.getInstance();
-            public static StoreData getInstance()
-            {
-                if (instance == null)
-                {
-                    instance = new StoreData();
-                }
-                return instance;
-            }
-
-            public AppData storeAppdata( AppData appdata)
-            {
-                var apptable = new SQLDatabase.App_table();
-                sqlmngr.openCon();
-                var conn = SQLDatabaseManager.getInstance().conn;
-                var sql = $"INSERT INTO {apptable.table}({apptable.org_id},{apptable.org_name},{apptable.org_type}) VALUES({appdata.Organization_id},'{appdata.Organization_name}','{appdata.Organization_type}');";
-                Console.WriteLine(sql);
-                var count = conn.ExecuteScalar<AppData>(sql);
-                sqlmngr.closeCon();
-                return appdata;
-            }
-
-        }
-
-        public class Validation
-        {
-            public static Validation instance = null;
-
-            public static Validation getInstance()
-            {
-                if(instance == null)
-                {
-                    instance=new Validation();
-                }
-                return (Validation)instance;
-            }
-            public bool isDataAvailable()
-            {
-                var app = new SQLDatabase.App_table();
-                try
-                {
-                    SQLDatabaseManager.getInstance().openCon();
-                    var conn = SQLDatabaseManager.getInstance().conn;
-                    var count = conn.ExecuteScalar($"SELECT COUNT(*) FROM {app.table};");
-                    SQLDatabaseManager.getInstance().closeCon();
-                    if (int.Parse(count.ToString()) > 0)
-                    {
-                        return true;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-                
-                
-                return false;
-            }
-            public bool staffVerification(int id,string pass)
-            {
-                var app=new SQLDatabase.Staff_table();
-                var conn = SQLDatabaseManager.getInstance().conn;
-                var count = conn.ExecuteScalar($"SELECT COUNT(*) FROM {app.table} WHERE {app.id}=={id} and {app.passcode};");
-                SQLDatabaseManager.getInstance().closeCon();
-                return false;
-            }
-        }
-
         public async void createTable()
         {
             //Console.WriteLine("Table Created");
@@ -204,20 +68,239 @@ namespace Student_Project
             {
                 Console.Write(ex.Message);
             }
-            
+
             //Console.WriteLine("Table Created");
             conn.Close();
         }
 
-        public void InsertData()
+
+        public void openCon()
         {
+            string connStringSQL = $"Server=UNVPNSI456L2824;Database={new SQLDatabase().DatabaseName};User Id=sa;Password=10107@Havish;";
+            conn = new SqlConnection(connStringSQL);
+            conn.Open();
+        }
+
+        public void closeCon()
+        {
+            conn.Close();
+        }
+
+        public class GetData
+        {
+            public static GetData instance = null;
+            public SQLDatabaseManager sqlmngr = SQLDatabaseManager.getInstance();
+            public static GetData getInstance()
+            {
+                if (instance == null)
+                {
+                    instance = new GetData();
+                }
+                return instance;
+            }
+
+            public AppData getAppdata()
+            {
+                //Console.WriteLine("Hi");
+                var apptable = new SQLDatabase.App_table();
+                sqlmngr.openCon();
+                var conn = SQLDatabaseManager.getInstance().conn;
+                var appdata = conn.QueryFirst<AppData>($"SELECT * FROM {apptable.table};");
+                //Console.WriteLine(appdata.Organization_name+"hi");
+                sqlmngr.closeCon();
+                return appdata;
+            }
+
+            public List<Departments> getDepartmentData()
+            {
+                var depTable = new SQLDatabase.departments();
+                sqlmngr.openCon();
+                var conn = SQLDatabaseManager.getInstance().conn;
+                List<Departments> depList = conn.Query<Departments>($"SELECT * FROM {depTable.table};").ToList<Departments>();
+                sqlmngr.closeCon();
+                return depList;
+            }
+
+            public List<Hobbies> getHobbies()
+            {
+                var hobtable = new SQLDatabase.Hobbies();
+                sqlmngr.openCon();
+                var conn = SQLDatabaseManager.getInstance().conn;
+                List<Hobbies> hobList = conn.Query<Departments>($"SELECT * FROM {hobtable.table};").ToList<Hobbies>();
+                sqlmngr.closeCon();
+                return hobList;
+            }
+
+            public async void getStudDataAsync()
+            {
+
+                var studTable = new SQLDatabase.Student_table();
+                var depTable = new SQLDatabase.departments();
+                var hobTable = new SQLDatabase.Hobbies();
+                sqlmngr.openCon();
+                var conn = SQLDatabaseManager.getInstance().conn;
+                string sql = $"SELECT * FROM {studTable.Table_Name} s INNER JOIN {hobTable.table} h ON s.{studTable.hob_id}=h.{hobTable.id} INNER JOIN {depTable.table} d ON s.{studTable.dep_id}=d.{depTable.id};";
+                Console.WriteLine(sql);
+                var studdata = await conn.QueryAsync<College_student, Hobbies, Departments, Student>(sql, (student, hobbies, departments) =>
+                       {
+                           student.departments = departments;
+                           student.hobbies = hobbies;
+                           return student;
+                       },
+                    splitOn: "hob_id,dep_id"
+                    );
+                var stList = studdata.ToList();
+                foreach (var st in stList)
+                {
+                    Console.WriteLine(st.f_name + " " + st.hobbies.hob_name);
+                }
+                sqlmngr.closeCon();
+                //return studdata;
+            }
+        }
+
+        public class StoreData
+        {
+            public static StoreData instance = null;
+
+            public SQLDatabaseManager sqlmngr = SQLDatabaseManager.getInstance();
+            public static StoreData getInstance()
+            {
+                if (instance == null)
+                {
+                    instance = new StoreData();
+                }
+                return instance;
+            }
+
+            //Store the Application Data
+            public AppData storeAppdata(AppData appdata)
+            {
+                try
+                {
+                    var apptable = new SQLDatabase.App_table();
+                    sqlmngr.openCon();
+                    var conn = SQLDatabaseManager.getInstance().conn;
+                    var sql = $"INSERT INTO {apptable.table}({apptable.org_id},{apptable.org_name},{apptable.org_type}) VALUES({appdata.Organization_id},'{appdata.Organization_name}','{appdata.Organization_type}');";
+                    Console.WriteLine(sql);
+                    var count = conn.ExecuteScalar<AppData>(sql);
+                    Console.WriteLine("Successfully Configured Application Data.....");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Not Configured your application....Please Contact Admin....");
+                }
+                finally
+                {
+                    sqlmngr.closeCon();
+                }
+                return appdata;
+
+            }
+
+            //Store the Departments Data
+            public void storeDepData(List<Departments> depList)
+            {
+                try
+                {
+                    var dep = new SQLDatabase.departments();
+                    sqlmngr.openCon();
+                    var conn = SQLDatabaseManager.getInstance().conn;
+                    conn.BulkInsert(depList);
+                    Console.WriteLine("Successfully Inserted");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Not Insert Departments data....please try again...");
+                }
+                finally
+                {
+                    sqlmngr.closeCon();
+                }
+               
+            }
+
+            //Store the Hobbies Data
+            public void storeHobData(List<Hobbies> hobList)
+            {
+                try
+                {
+                    var hob = new SQLDatabase.Hobbies();
+                    sqlmngr.openCon();
+                    var conn = SQLDatabaseManager.getInstance().conn;
+                    conn.BulkInsert(hobList);
+                    Console.WriteLine("Successfully Inserted");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Not Insert Hobbies data....please try again...");
+                }
+                finally
+                {
+                    sqlmngr.closeCon();
+                }
+               
+            }
+
+            //Store the Student List
+            public void storeStudData(College_student studData) 
+            {
+
+            }
+
+            //Store the Staff Data
+            public void storeStaffData(College_staff staffData)
+            {
+
+            }
 
         }
 
-        public void getData()
+        public class Validation
         {
+            public static Validation instance = null;
 
+            public static Validation getInstance()
+            {
+                if (instance == null)
+                {
+                    instance = new Validation();
+                }
+                return (Validation)instance;
+            }
+            public bool isDataAvailable()
+            {
+                var app = new SQLDatabase.App_table();
+                try
+                {
+                    SQLDatabaseManager.getInstance().openCon();
+                    var conn = SQLDatabaseManager.getInstance().conn;
+                    var count = conn.ExecuteScalar($"SELECT COUNT(*) FROM {app.table};");
+                    SQLDatabaseManager.getInstance().closeCon();
+                    if (int.Parse(count.ToString()) > 0)
+                    {
+                        return true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
+
+                return false;
+            }
+            public bool staffVerification(int id, string pass)
+            {
+                var app = new SQLDatabase.Staff_table();
+                var conn = SQLDatabaseManager.getInstance().conn;
+                var count = conn.ExecuteScalar($"SELECT COUNT(*) FROM {app.table} WHERE {app.id}=={id} and {app.passcode};");
+                SQLDatabaseManager.getInstance().closeCon();
+                return false;
+            }
         }
+
+
     }
     public class SQLDatabase
     {
@@ -284,13 +367,6 @@ namespace Student_Project
             public string id = "hob_id";
             public string name = "hob_name";
 
-        }
-
-        public class stud_hobbies
-        {
-            public string table = "student_hobbies";
-            public string id = new Student_table().reg_no;
-            public string hob_id = new Hobbies().id;
         }
 
     }

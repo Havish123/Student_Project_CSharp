@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 namespace Student_Project
 {
     //Base Staff Class
-    [Serializable]
     public class Staff
     {
         public Staff()
@@ -25,7 +24,6 @@ namespace Student_Project
     }
 
     //School Staff Model
-    [Serializable]
     public class School_staff : Staff
     {
         public School_staff()
@@ -39,7 +37,6 @@ namespace Student_Project
     }
 
     //College Staff Model
-    [Serializable]
     public class College_staff : Staff
     {
         public College_staff()
